@@ -4,8 +4,14 @@ import MicIcon from "@mui/icons-material/Mic";
 import HeadphonesIcon from "@mui/icons-material/Headphones";
 import "./Sidebar.scss";
 import SidebarChannle from "./SidebarChannle";
+import { auth } from "../firebase";
+import { useAppSelector } from "../app/hooks";
+import useCollection from "../hooks/useCollection";
 
 const Sidebar = () => {
+  const user = useAppSelector((state: any) => state.user);
+  const { documents: channels } = useCollection("channels");
+
   return (
     <div className="sidebar">
       <div className="sidebarLeft">
@@ -34,17 +40,25 @@ const Sidebar = () => {
           </div>
 
           <div className="sidebarChannelList">
-            <SidebarChannle />
-            <SidebarChannle />
-            <SidebarChannle />
+            {channels.map((channel) => (
+              <SidebarChannle
+                key={channel.id}
+                channel={channel}
+                id={channel.id}
+              />
+            ))}
           </div>
 
           <div className="sidebarSettings">
             <div className="sidebarAccount">
-              <img src="./icon.png" alt="" />
+              <img
+                src={user?.photo}
+                alt="account"
+                onClick={() => auth.signOut()}
+              />
               <div className="accountName">
-                <h4>test</h4>
-                <span>1234</span>
+                <h4>{user?.displayName}</h4>
+                <span>#{user?.uid.substring(0, 4)}</span>
               </div>
             </div>
 
