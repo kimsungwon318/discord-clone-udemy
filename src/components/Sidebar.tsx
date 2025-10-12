@@ -2,15 +2,39 @@ import { ExpandMoreOutlined, Settings } from "@mui/icons-material";
 import AddIcon from "@mui/icons-material/Add";
 import MicIcon from "@mui/icons-material/Mic";
 import HeadphonesIcon from "@mui/icons-material/Headphones";
+import React, { useEffect, useState } from "react";
 import "./Sidebar.scss";
 import SidebarChannle from "./SidebarChannle";
-import { auth } from "../firebase";
 import { useAppSelector } from "../app/hooks";
-import useCollection from "../hooks/useCollection";
+import { db, auth } from "../firebase";
+import {
+  collection,
+  addDoc,
+  DocumentData,
+  DocumentReference,
+} from "firebase/firestore";
+import useFirebase from "../hooks/useFirebase";
 
 const Sidebar = () => {
-  const user = useAppSelector((state: any) => state.user);
-  const { documents: channels } = useCollection("channels");
+  const user = useAppSelector((state) => state.user.user);
+  // const [channels, setChannels] = useState<Channel[]>([]);
+
+  const { documents: channels } = useFirebase("channels");
+  console.log(channels);
+
+  const addChannel = async () => {
+    let channelName = prompt("新しいチャンネルを作成します");
+
+    if (channelName) {
+      const docRef: DocumentReference<DocumentData> = await addDoc(
+        collection(db, "channels"),
+        {
+          channelName: channelName,
+        }
+      );
+      // console.log(docRef);
+    }
+  };
 
   return (
     <div className="sidebar">
@@ -36,17 +60,20 @@ const Sidebar = () => {
               <ExpandMoreOutlined />
               <h4>プログラミングチャンネル</h4>
             </div>
-            <AddIcon className="sidebarAddChannel" />
+            <AddIcon className="sidebarAddChannel" onClick={addChannel} />
           </div>
 
           <div className="sidebarChannelList">
             {channels.map((channel) => (
               <SidebarChannle
-                key={channel.id}
-                channel={channel}
                 id={channel.id}
+                channel={channel}
+                key={channel.id}
               />
             ))}
+            {/* <SidebarChannle id="1" channel="sample" />
+            <SidebarChannle id="1" channel="sample" />
+            <SidebarChannle id="1" channel="sample" /> */}
           </div>
 
           <div className="sidebarSettings">

@@ -1,52 +1,56 @@
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import "./App.scss";
+import { useAppSelector, useAppDispatch } from "./app/hooks";
 import Chat from "./components/Chat";
 
-import Sidebar from "./components/Sidebar";
 import Login from "./components/Login";
-import { useEffect } from "react";
-import { auth } from "./firebase";
+import Sidebar from "./components/Sidebar";
 import { login, logout } from "./features/userSlice";
-import { useDispatch } from "react-redux";
-import { ErrorBoundary } from "react-error-boundary";
-import { ErrorFallback } from "./utils/ErrorFallBack";
+import { auth } from "./firebase";
+import { Suspense } from "react";
+import { ErrorFallback } from "./components/ErrorFallBack";
 
 function App() {
-  const user = useSelector((state: any) => state.user);
-
-  console.log(user);
-
-  const dispatch = useDispatch();
+  const user = useAppSelector((state) => state.user.user);
+  // console.log(user);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    auth.onAuthStateChanged((loginUser) => {
-      console.log(loginUser);
-      if (loginUser) {
+    auth.onAuthStateChanged((authUser) => {
+      console.log(authUser);
+      if (authUser) {
         dispatch(
           login({
-            uid: loginUser.uid,
-            photo: loginUser.photoURL,
-            email: loginUser.email,
-            displayName: loginUser.displayName,
+            uid: authUser.uid,
+            photo: authUser.photoURL,
+            email: authUser.email,
+            displayName: authUser.displayName,
           })
         );
       } else {
         dispatch(logout());
       }
     });
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="App">
       {user ? (
         <>
+          {/* sidebar */}
           <ErrorBoundary FallbackComponent={ErrorFallback}>
+            {/* <Suspense fallback={<div>...Loading</div>}> */}
             <Sidebar />
+            {/* </Suspense> */}
           </ErrorBoundary>
+          {/* home */}
           <Chat />
         </>
       ) : (
-        <Login />
+        <>
+          <Login />
+        </>
       )}
     </div>
   );
