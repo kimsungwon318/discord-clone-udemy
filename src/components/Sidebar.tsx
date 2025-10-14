@@ -2,17 +2,12 @@ import { ExpandMoreOutlined, Settings } from "@mui/icons-material";
 import AddIcon from "@mui/icons-material/Add";
 import MicIcon from "@mui/icons-material/Mic";
 import HeadphonesIcon from "@mui/icons-material/Headphones";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import "./Sidebar.scss";
 import SidebarChannle from "./SidebarChannle";
 import { useAppSelector } from "../app/hooks";
 import { db, auth } from "../firebase";
-import {
-  collection,
-  addDoc,
-  DocumentData,
-  DocumentReference,
-} from "firebase/firestore";
+import { collection, addDoc } from "firebase/firestore";
 import useFirebase from "../hooks/useFirebase";
 
 const Sidebar = () => {
@@ -26,13 +21,9 @@ const Sidebar = () => {
     let channelName = prompt("新しいチャンネルを作成します");
 
     if (channelName) {
-      const docRef: DocumentReference<DocumentData> = await addDoc(
-        collection(db, "channels"),
-        {
-          channelName: channelName,
-        }
-      );
-      // console.log(docRef);
+      await addDoc(collection(db, "channels"), {
+        channelName: channelName,
+      });
     }
   };
 

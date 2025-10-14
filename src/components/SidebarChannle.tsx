@@ -1,8 +1,8 @@
-import { DocumentData } from "firebase/firestore";
-import "./SidebarChannel.scss";
+import { DocumentData } from "firebase/firestore/lite";
+import React, { useEffect } from "react";
 import { useAppDispatch } from "../app/hooks";
-import { useEffect } from "react";
 import { setChannelInfo } from "../features/appSlice";
+import "./SidebarChannel.scss";
 
 type Props = {
   id: string;
@@ -20,7 +20,7 @@ const SidebarChannle = (props: Props) => {
         channelName: channel.channel.channelName,
       })
     );
-  }, []);
+  }, [channel.channel.channelName, dispatch, id]);
 
   return (
     <div

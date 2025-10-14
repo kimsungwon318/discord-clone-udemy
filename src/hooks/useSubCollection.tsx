@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { db } from "../firebase";
 import { QueryDocumentSnapshot } from "firebase/firestore/lite";
 import {
   onSnapshot,
   collection,
   DocumentData,
-  CollectionReference,
   Timestamp,
   query,
   orderBy,
@@ -54,7 +53,7 @@ const useSubCollection = (
       });
       setSubDocuments(results);
     });
-  }, [channelId]);
+  }, [channelId, collectionName, subCollectionName]);
   return { subDocuments };
 };
 

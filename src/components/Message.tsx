@@ -1,6 +1,6 @@
 import { Avatar } from "@mui/material";
 import { Timestamp } from "firebase/firestore";
-
+import React from "react";
 import "./Message.scss";
 
 type Props = {
@@ -25,7 +25,6 @@ const Message = (props: Props) => {
         <h4>
           {user?.displayName}
           <span className="messageTimestamp">
-            2025-10-08 10:00:00
             {new Date(timestamp?.toDate()).toLocaleString()}
           </span>
         </h4>

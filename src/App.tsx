@@ -3,13 +3,11 @@ import { ErrorBoundary } from "react-error-boundary";
 import "./App.scss";
 import { useAppSelector, useAppDispatch } from "./app/hooks";
 import Chat from "./components/Chat";
-
+import { ErrorFallback } from "./components/ErrorFallBack";
 import Login from "./components/Login";
 import Sidebar from "./components/Sidebar";
 import { login, logout } from "./features/userSlice";
 import { auth } from "./firebase";
-import { Suspense } from "react";
-import { ErrorFallback } from "./components/ErrorFallBack";
 
 function App() {
   const user = useAppSelector((state) => state.user.user);
